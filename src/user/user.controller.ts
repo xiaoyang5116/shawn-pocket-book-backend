@@ -1,15 +1,43 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Res, Inject } from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    @Inject(JwtService) private jwtService: JwtService,
+  ) {}
 
   @Post('login')
-  async login(@Body() user: LoginDto) {
-    return await this.userService.findOne(user);
+  async login(
+    @Body() user: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const userInfo = await this.userService.login(user);
+    if (userInfo) {
+      const token = await this.jwtService.signAsync({
+        id: userInfo.id,
+        username: userInfo.username,
+      });
+
+      response.setHeader('authorization', 'bearer' + token);
+      return {
+        code: 200,
+        message: '登录成功',
+        data: {
+          token: token,
+        },
+      };
+    } else {
+      return {
+        code: 500,
+        message: '登录失败',
+      };
+    }
   }
 
   @Post('register')
