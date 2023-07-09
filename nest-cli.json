@@ -3,7 +3,6 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "generateOptions": {
-    "spec": false,
-    "flat": true
+    "spec": false
   }
 }

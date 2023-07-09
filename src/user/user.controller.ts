@@ -4,6 +4,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { Public } from 'src/common/decorator/public/public.decorator';
 
 @Controller('user')
 export class UserController {
@@ -12,6 +13,7 @@ export class UserController {
     @Inject(JwtService) private jwtService: JwtService,
   ) {}
 
+  @Public()
   @Post('login')
   async login(
     @Body() user: LoginDto,
@@ -24,7 +26,7 @@ export class UserController {
         username: userInfo.username,
       });
 
-      response.setHeader('authorization', 'bearer' + token);
+      response.setHeader('authorization', 'bearer ' + token);
       return {
         code: 200,
         message: '登录成功',
@@ -40,6 +42,7 @@ export class UserController {
     }
   }
 
+  @Public()
   @Post('register')
   async register(@Body() user: RegisterDto) {
     const newUser = await this.userService.create(user);

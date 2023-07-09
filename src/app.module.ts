@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { JwtModule } from '@nestjs/jwt';
       },
     }),
     UserModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
