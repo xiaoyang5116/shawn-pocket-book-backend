@@ -6,6 +6,7 @@ import {
   Res,
   Inject,
   Request,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from './dto/login.dto';
@@ -13,6 +14,7 @@ import { RegisterDto } from './dto/register.dto';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { Public } from 'src/common/decorator/public/public.decorator';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -82,6 +84,25 @@ export class UserController {
         id: userInfo.id,
         username: userInfo.username,
         signature: userInfo.signature || '',
+        avatar: userInfo.avatar,
+      },
+    };
+  }
+
+  @Patch('edit_userinfo')
+  async editUserInfo(
+    @Request() request: Request,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const userId = request['user'].id;
+    const userInfo = await this.userService.update(userId, updateUserDto);
+    return {
+      code: 200,
+      msg: '请求成功',
+      data: {
+        id: userInfo.id,
+        username: userInfo.username,
+        signature: userInfo.signature,
         avatar: userInfo.avatar,
       },
     };

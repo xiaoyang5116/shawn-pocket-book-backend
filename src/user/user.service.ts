@@ -1,10 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import * as crypto from 'crypto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 function md5(str: string): string {
   const hash = crypto.createHash('md5');
@@ -53,16 +54,21 @@ export class UserService {
   }
 
   async findOneById(id: number) {
-    return await this.userRepository.findOneBy({
+    const user = await this.userRepository.findOneBy({
       id,
     });
+    if (!user) throw new HttpException('用户不存在', 500);
+    return user;
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const userInfo = await this.userRepository.preload({
+      id: +id,
+      ...updateUserDto,
+    });
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+    if (!userInfo) throw new NotFoundException(`用户不存在`);
+
+    return this.userRepository.save(userInfo);
+  }
 }
