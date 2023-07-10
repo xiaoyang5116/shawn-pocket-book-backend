@@ -7,6 +7,11 @@ import {
   Inject,
   Request,
   Patch,
+  UploadedFile,
+  UseInterceptors,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from './dto/login.dto';
@@ -15,6 +20,7 @@ import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { Public } from 'src/common/decorator/public/public.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
@@ -105,6 +111,29 @@ export class UserController {
         signature: userInfo.signature,
         avatar: userInfo.avatar,
       },
+    };
+  }
+
+  @Public()
+  @Post('upload_avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  uploadAvatar(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 5 }),
+          new FileTypeValidator({ fileType: 'image/jpeg' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Body() body,
+  ) {
+    console.log(file);
+    return {
+      code: 200,
+      msg: '上传成功',
+      data: file.path.replace('public', 'static'),
     };
   }
 }
