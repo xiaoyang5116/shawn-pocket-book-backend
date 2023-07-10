@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Res, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Res,
+  Inject,
+  Request,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -22,8 +30,10 @@ export class UserController {
     const userInfo = await this.userService.login(user);
     if (userInfo) {
       const token = await this.jwtService.signAsync({
-        id: userInfo.id,
-        username: userInfo.username,
+        user: {
+          id: userInfo.id,
+          username: userInfo.username,
+        },
       });
 
       response.setHeader('authorization', 'bearer ' + token);
@@ -59,5 +69,21 @@ export class UserController {
         data: null,
       };
     }
+  }
+
+  @Get('userInfo')
+  async getUserInfo(@Request() request: Request) {
+    const userId = request['user'].id;
+    const userInfo = await this.userService.findOneById(userId);
+    return {
+      code: 200,
+      msg: '请求成功',
+      data: {
+        id: userInfo.id,
+        username: userInfo.username,
+        signature: userInfo.signature || '',
+        avatar: userInfo.avatar,
+      },
+    };
   }
 }
