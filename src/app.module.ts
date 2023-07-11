@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { CommonModule } from './common/common.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { BillModule } from './bill/bill.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { join } from 'path';
     }),
     UserModule,
     CommonModule,
+    BillModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],

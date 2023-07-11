@@ -1,7 +1,12 @@
+import { Bill } from 'src/bill/entities/bill.entity';
+import { Tag } from 'src/tag/entities/tag.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -38,4 +43,11 @@ export class User {
     comment: '创建时间',
   })
   createTime: Date;
+
+  @OneToMany(() => Bill, (bill) => bill.user)
+  bills: Bill[];
+
+  @JoinTable()
+  @ManyToMany(() => Tag, (tag) => tag.users)
+  tags: Tag[];
 }
