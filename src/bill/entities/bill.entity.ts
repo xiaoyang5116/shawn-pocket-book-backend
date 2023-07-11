@@ -25,7 +25,7 @@ export class Bill {
   createTime: Date;
 
   @Column({ comment: '账单备注', nullable: true })
-  remark?: string;
+  remark: string;
 
   @ManyToOne(() => User, {
     onDelete: 'CASCADE',

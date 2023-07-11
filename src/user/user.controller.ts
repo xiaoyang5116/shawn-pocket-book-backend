@@ -49,7 +49,7 @@ export class UserController {
         code: 200,
         message: '登录成功',
         data: {
-          token: token,
+          token: 'bearer ' + token,
         },
       };
     } else {
