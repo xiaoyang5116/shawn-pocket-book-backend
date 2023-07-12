@@ -223,4 +223,72 @@ export class BillController {
       data: null,
     };
   }
+
+  @Get('data')
+  async getDate(@Param('date') date: string, @Request() res: Request) {
+    const start = dayjs(date).startOf('month').unix();
+    const end = dayjs(date).endOf('month').unix();
+    const bills = await this.billService.findAllByUserId(res['user'].id);
+
+    const filterBills = bills.filter(
+      (bill) =>
+        dayjs(bill.createTime).unix() > start &&
+        dayjs(bill.createTime).unix() < end,
+    );
+
+    // 总支出
+    const total_expense = filterBills.reduce((arr, bill) => {
+      if (bill.pay_type == 1) {
+        arr += Number(bill.amount);
+      }
+      return arr;
+    }, 0);
+
+    // 总收入
+    const total_income = filterBills.reduce((arr, bill) => {
+      if (bill.pay_type == 2) {
+        arr += Number(bill.amount);
+      }
+      return arr;
+    }, 0);
+
+    // 收支构成
+    const total_data = filterBills.reduce(
+      (
+        arr: Array<{
+          tagId: number;
+          tagName: string;
+          pay_type: number;
+          number: number;
+        }>,
+        bill,
+      ) => {
+        const tagIdIndex = arr.findIndex((item) => item.tagId === bill.tagId);
+        if (tagIdIndex === -1) {
+          arr.push({
+            tagId: bill.tagId,
+            tagName: bill.tagName,
+            pay_type: bill.pay_type,
+            number: Number(bill.amount),
+          });
+        }
+        if (tagIdIndex > -1) {
+          arr[tagIdIndex].number += Number(bill.amount);
+        }
+
+        return arr;
+      },
+      [],
+    );
+
+    return {
+      code: 200,
+      msg: '请求成功',
+      data: {
+        total_expense: Number(total_expense).toFixed(2),
+        total_income: Number(total_income).toFixed(2),
+        total_data: total_data || [],
+      },
+    };
+  }
 }
