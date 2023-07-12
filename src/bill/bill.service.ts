@@ -45,13 +45,24 @@ export class BillService {
     return await this.billRepository.save(bill);
   }
 
-  async findOne(id: number) {
-    const bill = await this.billRepository.findOne({
-      where: {
-        id: id,
-      },
-      relations: ['user', 'tag'],
-    });
+  async billDetailById(id: number, userId: number) {
+    const bill = await this.billRepository
+      .createQueryBuilder('bill')
+      .leftJoinAndSelect(Tag, 'tag', 'tag.id = bill.tagId')
+      .select(
+        `
+        bill.id as id,
+        bill.amount as amount,
+        bill.createTime as createTime,
+        bill.remark as remark,
+        bill.tagId as tagId,
+        tag.name as tagName,
+        tag.pay_type as pay_type
+        `,
+      )
+      .where('bill.id = :id and bill.userId = :userId', { id: id, userId })
+      .getRawOne();
+
     return bill;
   }
 

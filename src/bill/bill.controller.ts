@@ -141,9 +141,9 @@ export class BillController {
     };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.billService.findOne(+id);
+  @Get('detail/:id')
+  detail(@Param('id') id: number, @Request() res: Request) {
+    return this.billService.billDetailById(+id, res['user'].id);
   }
 
   // @Patch(':id')
