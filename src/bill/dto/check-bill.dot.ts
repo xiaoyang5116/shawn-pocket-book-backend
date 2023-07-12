@@ -1,7 +1,6 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CheckBillDto {
-  @IsOptional()
   @IsString()
   date?: string;
 

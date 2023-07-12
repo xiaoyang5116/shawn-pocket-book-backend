@@ -14,6 +14,7 @@ export enum PAY_TYPE {
 }
 
 export type BillListType = {
+  id: number;
   amount: number;
   createTime: Date;
   remark: string | null;
@@ -60,6 +61,7 @@ export class BillService {
       .leftJoinAndSelect(Tag, 'tag', 'tag.id = bill.tagId')
       .select(
         `
+      bill.id as id,
       bill.amount as amount,
       bill.createTime as createTime,
       bill.remark as remark,
