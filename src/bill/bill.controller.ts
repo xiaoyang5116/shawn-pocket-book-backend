@@ -6,11 +6,13 @@ import {
   Param,
   Request,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { BillListType, BillService } from './bill.service';
 import { CreateBillDto } from './dto/create-bill.dto';
 import * as dayjs from 'dayjs';
 import { CheckBillDto } from './dto/check-bill.dot';
+import { UpdateBillDto } from './dto/update-bill.dto';
 
 @Controller('bill')
 export class BillController {
@@ -163,10 +165,33 @@ export class BillController {
     };
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateBillDto: UpdateBillDto) {
-  //   return this.billService.update(+id, updateBillDto);
-  // }
+  @Patch(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateBillDto: UpdateBillDto,
+    @Request() res: Request,
+  ) {
+    const foundBill = await this.billService.billDetailByBillIdAndUserId(
+      +id,
+      res['user'].id,
+    );
+
+    if (!foundBill) {
+      return {
+        code: 500,
+        msg: '系统错误',
+        data: null,
+      };
+    }
+
+    const bill = await this.billService.update(+id, updateBillDto);
+
+    return {
+      code: 200,
+      msg: '修改成功',
+      data: bill,
+    };
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

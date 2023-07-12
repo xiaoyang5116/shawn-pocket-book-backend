@@ -6,6 +6,7 @@ import { Bill } from './entities/bill.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
+import { UpdateBillDto } from './dto/update-bill.dto';
 
 export enum PAY_TYPE {
   '不计入账',
@@ -33,7 +34,7 @@ export class BillService {
 
   async create(id: number, createBillDto: CreateBillDto) {
     const user = await this.userRepository.findOneBy({ id });
-    const tag = await this.tagRepository.findOneBy({ id: createBillDto.tag });
+    const tag = await this.tagRepository.findOneBy({ id: createBillDto.tagId });
     if (!user || !tag) {
       throw new HttpException('格式不对', 500);
     }
@@ -85,9 +86,22 @@ export class BillService {
       .getRawMany();
   }
 
-  // update(id: number, updateBillDto: UpdateBillDto) {
-  //   return `This action updates a #${id} bill`;
-  // }
+  async update(id: number, updateBillDto: UpdateBillDto) {
+    const tag = updateBillDto.tagId
+      ? {
+          tag: {
+            id: updateBillDto.tagId,
+          },
+        }
+      : {};
+    const bill = await this.billRepository.preload({
+      id,
+      ...updateBillDto,
+      ...tag,
+    });
+
+    return await this.billRepository.save(bill);
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} bill`;

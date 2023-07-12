@@ -11,5 +11,5 @@ export class CreateBillDto {
   readonly remark: string;
 
   @IsNumber()
-  readonly tag: number;
+  readonly tagId: number;
 }
