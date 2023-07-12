@@ -21,7 +21,9 @@ import { JwtService } from '@nestjs/jwt';
 import { Public } from 'src/common/decorator/public/public.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(

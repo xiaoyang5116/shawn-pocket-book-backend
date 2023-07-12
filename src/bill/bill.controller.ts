@@ -12,9 +12,11 @@ import {
 import { BillListType, BillService } from './bill.service';
 import { CreateBillDto } from './dto/create-bill.dto';
 import * as dayjs from 'dayjs';
-import { CheckBillDto } from './dto/check-bill.dot';
 import { UpdateBillDto } from './dto/update-bill.dto';
+import { CheckBillDto } from './dto/check-bill.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('bill')
 @Controller('bill')
 export class BillController {
   constructor(private readonly billService: BillService) {}
