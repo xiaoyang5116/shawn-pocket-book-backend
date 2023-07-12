@@ -45,7 +45,7 @@ export class BillService {
     return await this.billRepository.save(bill);
   }
 
-  async billDetailById(id: number, userId: number) {
+  async billDetailByBillIdAndUserId(id: number, userId: number) {
     const bill = await this.billRepository
       .createQueryBuilder('bill')
       .leftJoinAndSelect(Tag, 'tag', 'tag.id = bill.tagId')

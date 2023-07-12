@@ -142,8 +142,25 @@ export class BillController {
   }
 
   @Get('detail/:id')
-  detail(@Param('id') id: number, @Request() res: Request) {
-    return this.billService.billDetailById(+id, res['user'].id);
+  async detail(@Param('id') id: number, @Request() res: Request) {
+    const detail = await this.billService.billDetailByBillIdAndUserId(
+      +id,
+      res['user'].id,
+    );
+
+    if (!detail) {
+      return {
+        code: 500,
+        msg: '系统错误',
+        data: null,
+      };
+    }
+
+    return {
+      code: 200,
+      msg: '请求成功',
+      data: detail,
+    };
   }
 
   // @Patch(':id')
