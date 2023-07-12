@@ -7,6 +7,21 @@ import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 
+export enum PAY_TYPE {
+  '不计入账',
+  '支出',
+  '收入',
+}
+
+export type BillListType = {
+  amount: number;
+  createTime: Date;
+  remark: string | null;
+  tagId: number;
+  tagName: string;
+  pay_type: number;
+};
+
 @Injectable()
 export class BillService {
   constructor(
@@ -39,9 +54,23 @@ export class BillService {
     return bill;
   }
 
-  // findAll() {
-  //   return `This action returns all bill`;
-  // }
+  async findAllByUserId(id: number): Promise<BillListType[]> {
+    return await this.billRepository
+      .createQueryBuilder('bill')
+      .leftJoinAndSelect(Tag, 'tag', 'tag.id = bill.tagId')
+      .select(
+        `
+      bill.amount as amount,
+      bill.createTime as createTime,
+      bill.remark as remark,
+      bill.tagId as tagId,
+      tag.name as tagName,
+      tag.pay_type as pay_type
+      `,
+      )
+      .where('bill.userId = :id', { id: id })
+      .getRawMany();
+  }
 
   // update(id: number, updateBillDto: UpdateBillDto) {
   //   return `This action updates a #${id} bill`;
