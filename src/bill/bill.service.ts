@@ -103,7 +103,7 @@ export class BillService {
     return await this.billRepository.save(bill);
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} bill`;
-  // }
+  async remove(id: number) {
+    return await this.billRepository.delete(id);
+  }
 }

@@ -7,6 +7,7 @@ import {
   Request,
   Query,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { BillListType, BillService } from './bill.service';
 import { CreateBillDto } from './dto/create-bill.dto';
@@ -193,8 +194,33 @@ export class BillController {
     };
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.billService.remove(+id);
-  // }
+  @Delete(':id')
+  async remove(@Param('id') id: string, @Request() res: Request) {
+    const foundBill = this.billService.billDetailByBillIdAndUserId(
+      +id,
+      res['user'].id,
+    );
+
+    if (!foundBill) {
+      return {
+        code: 500,
+        msg: '删除失败',
+        data: null,
+      };
+    }
+
+    const { affected } = await this.billService.remove(+id);
+    if (affected === 0) {
+      return {
+        code: 500,
+        msg: '删除失败',
+        data: null,
+      };
+    }
+    return {
+      code: 200,
+      msg: '删除成功',
+      data: null,
+    };
+  }
 }
