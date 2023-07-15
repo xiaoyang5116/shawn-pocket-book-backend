@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: '*',
-    allowedHeaders: ['Authorization', 'content-type'],
+    // allowedHeaders: ['Authorization', 'content-type'], //  设置后要严格匹配
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
 
