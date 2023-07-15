@@ -6,8 +6,8 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   @Length(6, 30)
-  @Matches(/^[a-zA-Z0-9#$%_-]+$/, {
-    message: '用户名只能是字母、数字或者 #、$、%、_、- 这些字符',
+  @Matches(/^[a-zA-Z0-9#$%_.-]+$/, {
+    message: '账号只能是字母、数字或者 #、$、%、_、.、- 这些字符',
   })
   readonly username: string;
 
@@ -15,5 +15,8 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   @Length(6, 30)
+  @Matches(/^[a-zA-Z0-9#$%_.-]+$/, {
+    message: '密码只能是字母、数字或者 #、$、%、_、.、- 这些字符',
+  })
   readonly password: string;
 }
