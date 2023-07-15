@@ -71,7 +71,7 @@ export class BillController {
     // ]
     const billsMap = filterBillsByTimeAndTag
       .reduce((curr: Array<{ date: string; bills: BillListType[] }>, bill) => {
-        const currDate = dayjs(bill.createTime).format('YYYY-MM');
+        const currDate = dayjs(bill.createTime).format('YYYY-MM-DD');
 
         // 如果能在累加的数组中找到当前项日期 date，那么在数组中的加入当前项到 bills 数组。
         if (
@@ -90,7 +90,7 @@ export class BillController {
           curr.findIndex((item) => item.date == currDate) == -1
         ) {
           curr.push({
-            date,
+            date: currDate,
             bills: [bill],
           });
         }
@@ -98,7 +98,7 @@ export class BillController {
         // 如果 curr 为空数组，则默认添加第一个账单项 item ，格式化为下列模式
         if (!curr.length) {
           curr.push({
-            date,
+            date: currDate,
             bills: [bill],
           });
         }
