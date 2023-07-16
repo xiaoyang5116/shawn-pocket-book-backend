@@ -6,6 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import * as crypto from 'crypto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Tag } from 'src/tag/entities/tag.entity';
 
 function md5(str: string): string {
   const hash = crypto.createHash('md5');
@@ -20,6 +21,7 @@ const defaultAvatar =
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Tag) private tagRepository: Repository<Tag>,
   ) {}
 
   async create(user: RegisterDto) {
@@ -29,12 +31,19 @@ export class UserService {
     if (foundUser) {
       throw new HttpException('用户已存在', 500);
     }
+    const tags = await this.tagRepository.find({
+      order: {
+        id: 'ASC',
+      },
+      take: 3,
+    });
 
     const newUser = this.userRepository.create({
       username: user.username,
       password: md5(user.password),
       signature: '世界和平。',
       avatar: defaultAvatar,
+      tags: tags,
     });
 
     return this.userRepository.save(newUser);

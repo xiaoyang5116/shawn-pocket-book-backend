@@ -30,7 +30,7 @@ export class LoginGuard implements CanActivate {
     const bearer = authorization.split(' ');
 
     if (!bearer || bearer.length < 2) {
-      throw new UnauthorizedException('登录 token 错误');
+      throw new UnauthorizedException('请登录');
     }
 
     const token = bearer[1];

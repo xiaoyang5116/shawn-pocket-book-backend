@@ -6,10 +6,11 @@ import { User } from './entities/user.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join, extname } from 'path';
+import { Tag } from 'src/tag/entities/tag.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Tag]),
     MulterModule.register({
       storage: diskStorage({
         destination: join('./public/uploads/avatar'),

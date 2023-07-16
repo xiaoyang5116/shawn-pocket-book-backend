@@ -18,5 +18,5 @@ export class CheckBillDto {
 
   @ApiProperty({ description: '标签id' })
   @IsOptional()
-  readonly tagId: number;
+  readonly tagId: number | 'all';
 }
