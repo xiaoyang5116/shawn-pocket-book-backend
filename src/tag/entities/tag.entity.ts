@@ -16,6 +16,11 @@ export class Tag {
   })
   pay_type: number;
 
+  @Column({
+    comment: '标签类型: 0-默认，1-用户自定义',
+  })
+  tag_type: number;
+
   @ManyToMany(() => User, (user) => user.tags)
   users: User[];
 }
