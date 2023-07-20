@@ -100,7 +100,17 @@ export class BillService {
       ...tag,
     });
 
-    return await this.billRepository.save(bill);
+    const result = await this.billRepository.save(bill);
+
+    return {
+      id: result.id,
+      amount: result.amount,
+      tagId: result.tag.id,
+      tagName: result.tag.name,
+      createTime: result.createTime,
+      remark: result.remark,
+      pay_type: result.tag.pay_type,
+    };
   }
 
   async remove(id: number) {
