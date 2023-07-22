@@ -24,9 +24,6 @@ import { TagModule } from './tag/tag.module';
         logging: true,
         poolSize: 10,
         connectorPackage: 'mysql2',
-        extra: {
-          authPlugin: 'sha256_password',
-        },
         autoLoadEntities: true, // 有助于自动加载模块, 而不是手动输入实体数组 "entities": [],
         synchronize: true, // 确保 Typeorm 实体在每次运行程序时都会与数据库同步, 生产环境要关闭为 false
       }),
@@ -40,8 +37,9 @@ import { TagModule } from './tag/tag.module';
       },
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-      serveRoot: '/static',
+      // rootPath: join(__dirname, '..', 'public'),
+      // serveRoot: '/static',
+      rootPath: join(__dirname, '/static'),
     }),
     UserModule,
     CommonModule,
