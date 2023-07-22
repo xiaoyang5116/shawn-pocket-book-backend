@@ -13,7 +13,7 @@ import { Tag } from 'src/tag/entities/tag.entity';
     TypeOrmModule.forFeature([User, Tag]),
     MulterModule.register({
       storage: diskStorage({
-        destination: join('./public/uploads/avatar'),
+        destination: join('./src/static/uploads/avatar'),
         filename: (_, file, callback) => {
           const fileName = `${
             new Date().getTime() + extname(file.originalname)

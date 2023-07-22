@@ -38,8 +38,8 @@ import { TagModule } from './tag/tag.module';
     }),
     ServeStaticModule.forRoot({
       // rootPath: join(__dirname, '..', 'public'),
-      // serveRoot: '/static',
       rootPath: join(__dirname, '/static'),
+      serveRoot: '/static',
     }),
     UserModule,
     CommonModule,

@@ -159,7 +159,7 @@ export class UserController {
     return {
       code: 200,
       msg: '上传成功',
-      data: file.path.replace('public', '/static'),
+      data: file.path.replace('src', ''),
     };
   }
 }
