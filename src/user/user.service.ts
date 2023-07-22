@@ -14,7 +14,7 @@ function md5(str: string): string {
   return hash.digest('hex');
 }
 
-const defaultAvatar = 'static/uploads/avatar/default_avatar.png';
+const defaultAvatar = '/static/uploads/avatar/default_avatar.png';
 
 @Injectable()
 export class UserService {
