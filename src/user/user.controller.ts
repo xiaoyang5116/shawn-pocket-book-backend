@@ -22,6 +22,7 @@ import { Public } from 'src/common/decorator/public/public.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -116,7 +117,30 @@ export class UserController {
     };
   }
 
-  @Public()
+  @Patch('reset_password')
+  async resetPassword(
+    @Body() resetPassword: ResetPasswordDto,
+    @Request() request: Request,
+  ) {
+    const userInfo = await this.userService.resetPassword(
+      resetPassword,
+      request['user'].id,
+    );
+
+    if (userInfo) {
+      return {
+        code: 200,
+        msg: '修改成功',
+        data: null,
+      };
+    }
+    return {
+      code: 500,
+      msg: '服务端错误',
+      data: null,
+    };
+  }
+
   @Post('upload_avatar')
   @UseInterceptors(FileInterceptor('avatar'))
   uploadAvatar(

@@ -7,8 +7,9 @@ import { RegisterDto } from './dto/register.dto';
 import * as crypto from 'crypto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Tag } from 'src/tag/entities/tag.entity';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
-function md5(str: string): string {
+export function md5(str: string): string {
   const hash = crypto.createHash('md5');
   hash.update(str);
   return hash.digest('hex');
@@ -59,6 +60,21 @@ export class UserService {
       throw new HttpException('密码错误', 500);
     }
     return foundUser;
+  }
+
+  async resetPassword(resetPassword: ResetPasswordDto, userId: number) {
+    const foundUser = await this.findOneById(userId);
+    if (foundUser.password !== md5(resetPassword.oldPassword)) {
+      throw new HttpException('原密码错位', 500);
+    }
+    if (resetPassword.newPassword !== resetPassword.confirmPassword) {
+      throw new HttpException('两次密码不一致', 500);
+    }
+    const updatePassword = await this.userRepository.preload({
+      id: +userId,
+      password: md5(resetPassword.newPassword),
+    });
+    return this.userRepository.save(updatePassword);
   }
 
   async findOneById(id: number) {
