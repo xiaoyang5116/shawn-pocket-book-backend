@@ -116,4 +116,26 @@ export class BillService {
   async remove(id: number) {
     return await this.billRepository.delete(id);
   }
+
+  async findByCreateTime(date: string, userId: number) {
+    return await this.billRepository
+      .createQueryBuilder('bill')
+      .leftJoinAndSelect(Tag, 'tag', 'tag.id = bill.tagId')
+      .select(
+        `
+    bill.id as id,
+    bill.amount as amount,
+    bill.createTime as createTime,
+    bill.remark as remark,
+    bill.tagId as tagId,
+    tag.name as tagName,
+    tag.pay_type as pay_type
+    `,
+      )
+      .where('bill.userId = :id and bill.createTime like :date', {
+        id: userId,
+        date: `${date}%`,
+      })
+      .getRawMany();
+  }
 }

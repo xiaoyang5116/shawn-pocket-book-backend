@@ -123,13 +123,13 @@ export class UserController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 5 }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
+          new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 1 }),
+          new FileTypeValidator({ fileType: 'image/*' }),
         ],
       }),
     )
     file: Express.Multer.File,
-    @Body() body,
+    // @Body() body,
   ) {
     console.log(file);
     return {

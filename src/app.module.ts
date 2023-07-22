@@ -36,7 +36,7 @@ import { TagModule } from './tag/tag.module';
       global: true,
       secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: '24h',
+        expiresIn: '7 days',
       },
     }),
     ServeStaticModule.forRoot({

@@ -227,19 +227,11 @@ export class BillController {
   }
 
   @Get('data')
-  async getDate(@Param('date') date: string, @Request() res: Request) {
-    const start = dayjs(date).startOf('month').unix();
-    const end = dayjs(date).endOf('month').unix();
-    const bills = await this.billService.findAllByUserId(res['user'].id);
-
-    const filterBills = bills.filter(
-      (bill) =>
-        dayjs(bill.createTime).unix() > start &&
-        dayjs(bill.createTime).unix() < end,
-    );
+  async getDate(@Query('date') date: string, @Request() res: Request) {
+    const bills = await this.billService.findByCreateTime(date, res['user'].id);
 
     // 总支出
-    const total_expense = filterBills.reduce((arr, bill) => {
+    const total_expense = bills.reduce((arr, bill) => {
       if (bill.pay_type == 1) {
         arr += Number(bill.amount);
       }
@@ -247,7 +239,7 @@ export class BillController {
     }, 0);
 
     // 总收入
-    const total_income = filterBills.reduce((arr, bill) => {
+    const total_income = bills.reduce((arr, bill) => {
       if (bill.pay_type == 2) {
         arr += Number(bill.amount);
       }
@@ -255,7 +247,7 @@ export class BillController {
     }, 0);
 
     // 收支构成
-    const total_data = filterBills.reduce(
+    const total_data = bills.reduce(
       (
         arr: Array<{
           tagId: number;
@@ -287,8 +279,8 @@ export class BillController {
       code: 200,
       msg: '请求成功',
       data: {
-        total_expense: Number(total_expense).toFixed(2),
-        total_income: Number(total_income).toFixed(2),
+        total_expense: total_expense,
+        total_income: total_income,
         total_data: total_data || [],
       },
     };
