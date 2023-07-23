@@ -31,18 +31,12 @@ export class UserService {
     if (foundUser) {
       throw new HttpException('用户已存在', 500);
     }
-    const tags = await this.tagRepository.find({
-      where: {
-        tag_type: 0,
-      },
-    });
 
     const newUser = this.userRepository.create({
       username: user.username,
       password: md5(user.password),
       signature: '世界和平。',
       avatar: defaultAvatar,
-      tags: tags,
     });
 
     return this.userRepository.save(newUser);

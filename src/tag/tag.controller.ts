@@ -55,4 +55,44 @@ export class TagController {
       throw new HttpException('没有权限', 500);
     }
   }
+
+  @Get('init_tag')
+  async initTag(@Request() res: Request) {
+    if (res['user'].username === 'adminYx') {
+      const init_data: (CreateTagDto & { tag_type: number })[] = [
+        { name: '餐饮', pay_type: 1, tag_type: 0 },
+        { name: '交通', pay_type: 1, tag_type: 0 },
+        { name: '服饰', pay_type: 1, tag_type: 0 },
+        { name: '购物', pay_type: 1, tag_type: 0 },
+        { name: '服务', pay_type: 1, tag_type: 0 },
+        { name: '教育', pay_type: 1, tag_type: 0 },
+        { name: '娱乐', pay_type: 1, tag_type: 0 },
+        { name: '运动', pay_type: 1, tag_type: 0 },
+        { name: '生活缴费', pay_type: 1, tag_type: 0 },
+        { name: '旅行', pay_type: 1, tag_type: 0 },
+        { name: '宠物', pay_type: 1, tag_type: 0 },
+        { name: '医疗', pay_type: 1, tag_type: 0 },
+        { name: '保险', pay_type: 1, tag_type: 0 },
+        { name: '公益', pay_type: 1, tag_type: 0 },
+        { name: '发红包', pay_type: 1, tag_type: 0 },
+        { name: '转账', pay_type: 1, tag_type: 0 },
+        { name: '其他人情', pay_type: 1, tag_type: 0 },
+        { name: '其他', pay_type: 1, tag_type: 0 },
+        { name: '生意', pay_type: 2, tag_type: 0 },
+        { name: '工资', pay_type: 2, tag_type: 0 },
+        { name: '奖金', pay_type: 2, tag_type: 0 },
+        { name: '其他人情', pay_type: 2, tag_type: 0 },
+        { name: '收红包', pay_type: 2, tag_type: 0 },
+        { name: '收转账', pay_type: 2, tag_type: 0 },
+        { name: '商家转账', pay_type: 2, tag_type: 0 },
+        { name: '退款', pay_type: 2, tag_type: 0 },
+        { name: '其他', pay_type: 2, tag_type: 0 },
+        { name: '理财', pay_type: 0, tag_type: 0 },
+        { name: '借还款', pay_type: 0, tag_type: 0 },
+        { name: '其他', pay_type: 0, tag_type: 0 },
+      ];
+      return this.tagService.batchCreateTag(init_data);
+    }
+    throw new HttpException('没有权限', 500);
+  }
 }

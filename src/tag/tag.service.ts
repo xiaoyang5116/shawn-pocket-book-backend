@@ -9,13 +9,18 @@ export class TagService {
   constructor(@InjectRepository(Tag) private tagRepository: Repository<Tag>) {}
 
   async findTagsByUserId(id: number) {
-    return await this.tagRepository.find({
+    const defaultTag = await this.tagRepository.findBy({
+      tag_type: 0,
+    });
+    const userTag = await this.tagRepository.find({
       where: {
         users: {
           id: id,
         },
       },
     });
+
+    return [...defaultTag, ...userTag];
   }
 
   async createTag({ name, pay_type }: CreateTagDto, tag_type: number) {
@@ -35,5 +40,9 @@ export class TagService {
     });
 
     return this.tagRepository.save(tags);
+  }
+
+  async batchCreateTag(tag: CreateTagDto[]) {
+    return await this.tagRepository.manager.save(Tag, tag);
   }
 }
