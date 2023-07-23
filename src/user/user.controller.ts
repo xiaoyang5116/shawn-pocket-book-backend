@@ -7,11 +7,11 @@ import {
   Inject,
   Request,
   Patch,
-  UploadedFile,
-  UseInterceptors,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
+  // UploadedFile,
+  // UseInterceptors,
+  // ParseFilePipe,
+  // MaxFileSizeValidator,
+  // FileTypeValidator,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from './dto/login.dto';
@@ -20,7 +20,7 @@ import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { Public } from 'src/common/decorator/public/public.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+// import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 
@@ -141,25 +141,25 @@ export class UserController {
     };
   }
 
-  @Post('upload_avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  uploadAvatar(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 1 }),
-          new FileTypeValidator({ fileType: 'image/*' }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-    // @Body() body,
-  ) {
-    console.log(file);
-    return {
-      code: 200,
-      msg: '上传成功',
-      data: file.path.replace('src', ''),
-    };
-  }
+  // @Post('upload_avatar')
+  // @UseInterceptors(FileInterceptor('avatar'))
+  // uploadAvatar(
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [
+  //         new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 1 }),
+  //         new FileTypeValidator({ fileType: 'image/*' }),
+  //       ],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  //   // @Body() body,
+  // ) {
+  //   console.log(file);
+  //   return {
+  //     code: 200,
+  //     msg: '上传成功',
+  //     data: file.path.replace('src', ''),
+  //   };
+  // }
 }
