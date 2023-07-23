@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { CreateTagDto } from './dto/create-tag.dto';
-import { Public } from 'src/common/decorator/public/public.decorator';
 
 @Controller('tag')
 export class TagController {
@@ -47,9 +46,13 @@ export class TagController {
     };
   }
 
-  @Public()
-  @Post('adminAdd')
-  async createTag(@Body() createTag: CreateTagDto) {
-    return this.tagService.createTag(createTag);
+  @Post('add')
+  async createTag(@Body() createTag: CreateTagDto, @Request() res: Request) {
+    if (res['user'].username === 'adminYx') {
+      return this.tagService.createTag(createTag, 0);
+    } else {
+      // return this.tagService.createTag(createTag, 1);
+      throw new HttpException('没有权限', 500);
+    }
   }
 }

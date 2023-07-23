@@ -32,10 +32,9 @@ export class UserService {
       throw new HttpException('用户已存在', 500);
     }
     const tags = await this.tagRepository.find({
-      order: {
-        id: 'ASC',
+      where: {
+        tag_type: 0,
       },
-      take: 3,
     });
 
     const newUser = this.userRepository.create({

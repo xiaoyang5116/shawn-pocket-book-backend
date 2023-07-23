@@ -18,12 +18,11 @@ export class TagService {
     });
   }
 
-  async createTag({ name, pay_type }: CreateTagDto) {
+  async createTag({ name, pay_type }: CreateTagDto, tag_type: number) {
     const tag = await this.tagRepository.findOne({
       where: {
         name: name,
         pay_type,
-        tag_type: 0,
       },
     });
 
@@ -32,7 +31,7 @@ export class TagService {
     const tags = this.tagRepository.create({
       name,
       pay_type,
-      tag_type: 0,
+      tag_type: tag_type,
     });
 
     return this.tagRepository.save(tags);
