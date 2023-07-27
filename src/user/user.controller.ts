@@ -122,6 +122,13 @@ export class UserController {
     @Body() resetPassword: ResetPasswordDto,
     @Request() request: Request,
   ) {
+    if (request['user'].username === 'youkedenglu') {
+      return {
+        code: 500,
+        msg: '游客不能修改',
+        data: null,
+      };
+    }
     const userInfo = await this.userService.resetPassword(
       resetPassword,
       request['user'].id,
